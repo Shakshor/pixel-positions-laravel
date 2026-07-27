@@ -10,9 +10,7 @@
             <x-tag>Tag</x-tag>
             <x-tag>Tag</x-tag>
         </div>
-        <img
-            src="{{ Vite::asset('resources/images/logo.svg') }}"
-            alt=""
-        >
+
+        <x-employer-logo :width="42" />
     </div>
 </div>

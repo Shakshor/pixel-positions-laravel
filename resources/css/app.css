@@ -12,4 +12,7 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 
     --font-hanken: 'Hanken Grotesk', system-ui, sans-serif;
+
+    --text-2xs: 0.625rem;
+    /*10px */
 }
