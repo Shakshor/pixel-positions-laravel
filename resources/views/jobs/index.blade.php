@@ -19,8 +19,11 @@
             <x-section-heading>Featured Jobs</x-section-heading>
 
             <div class="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                @foreach ($jobs as $job)
-                    <x-job-card :tags="$tags" />
+                @foreach ($featuredJobs as $job)
+                    <x-job-card
+                        :tags="$tags"
+                        :job="$job"
+                    />
                 @endforeach
             </div>
 
