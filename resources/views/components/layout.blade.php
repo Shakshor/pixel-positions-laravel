@@ -3,42 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <meta
-        http-equiv="X-UA-Compatible"
-        content="ie=edge"
-    >
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-    <link
-        href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 
     <title>Document</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-black text-white">
+<body class="bg-black pb-10 text-white">
     <div class="px-10">
         <nav class="flex items-center justify-between border-b border-white/10 py-4">
             <div>
                 <a href="/">
-                    <img
-                        src="{{ Vite::asset('resources/images/logo.svg') }}"
-                        alt=""
-                    >
+                    <img src="{{ Vite::asset('resources/images/logo.svg') }}" alt="">
                 </a>
             </div>
 
@@ -49,9 +30,18 @@
                 <a href="#">Companies</a>
             </div>
 
-            <div>
-                <a href="">Post A Job</a>
-            </div>
+            @auth
+                <div>
+                    <a href="">Post A Job</a>
+                </div>
+            @endauth
+
+            @guest
+                <div class="space-x-6 font-bold">
+                    <a href="/register">Sign Up</a>
+                    <a href="/login">Log In</a>
+                </div>
+            @endguest
         </nav>
     </div>
 
