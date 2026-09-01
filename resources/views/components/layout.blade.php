@@ -32,7 +32,7 @@
 
             @auth
                 <div>
-                    <a href="">Post A Job</a>
+                    <a href="/jobs/create">Post A Job</a>
                 </div>
             @endauth
 

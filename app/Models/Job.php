@@ -11,6 +11,15 @@ class Job extends Model
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'salary',
+        'location',
+        'schedule',
+        'url',
+        'is_featured',
+    ];
+
     // 
     public function employer(): BelongsTo
     {
