@@ -2,13 +2,15 @@
 
 <x-panel class="flex gap-x-6">
     <div>
-        <x-employer-logo />
+        <x-employer-logo :employer="$job->employer" />
     </div>
 
     <div class="flex flex-1 flex-col">
         <a class="mb-2 self-start text-sm text-gray-400">{{ $job->employer->name }}</a>
 
-        <h3 class="mt-3 text-xl font-bold transition-colors duration-300 group-hover:text-blue-800">{{ $job->title }}
+        <h3 class="mt-3 text-xl font-bold transition-colors duration-300 group-hover:text-blue-800">
+            <a href="{{ $job->url }}" target="_blank"> {{ $job->title }}
+            </a>
         </h3>
         <p class="font-sm mt-auto text-gray-400">{{ $job->salary }}</p>
     </div>

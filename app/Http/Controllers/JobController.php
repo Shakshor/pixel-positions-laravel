@@ -17,7 +17,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::latest()->get()->groupBy('is_featured');
+        $jobs = Job::latest()->with('employer', 'tags')->get()->groupBy('is_featured');
 
         return view('jobs.index', [
             'jobs' => $jobs[0],
@@ -46,16 +46,16 @@ class JobController extends Controller
             'location'  => ['required'],
             'schedule'  => ['required', Rule::in(['Part Time', 'Full Time'])],
             'url'       => ['required', 'active_url'],
-            'tags'       => ['required'],
+            'tags'      => ['required'],
         ]);
 
-        $attributes['featured'] = $request->has('featured');
+        $attributes['is_featured'] = $request->has('featured');
 
         $job = Auth::user()->employer->jobs()->create(Arr::except($attributes, 'tags'));
 
         if ($attributes['tags'] ?? false) {
             foreach (explode(',', $attributes['tags']) as $tag) {
-                $job->tag(trim($tag));
+                $job->tag($tag);
             }
         }
 
