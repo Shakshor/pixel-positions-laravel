@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\JobFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Job extends Model
 {
-    /** @use HasFactory<\Database\Factories\JobFactory> */
+    /** @use HasFactory<JobFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -20,7 +21,7 @@ class Job extends Model
         'is_featured',
     ];
 
-    // 
+    //
     public function employer(): BelongsTo
     {
         return $this->belongsTo(Employer::class);
@@ -28,7 +29,7 @@ class Job extends Model
 
     public function tag(string $name)
     {
-        $tag = Tag::firstOrCreate(['name' => $name]);
+        $tag = Tag::firstOrCreate(['name' => strtolower(trim($name))]);
 
         $this->tags()->attach($tag);
     }

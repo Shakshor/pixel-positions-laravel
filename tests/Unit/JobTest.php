@@ -19,8 +19,9 @@ it('belongs to an employer', function () {
 it('can have tags', function () {
     // Arrange
     $job = Job::factory()->create();
-    // Act 
-    $job->tag('frontend');
+    // Act
+    $job->tag(' Frontend ');
     // Assert
     expect($job->tags)->toHaveCount(1);
+    expect($job->tags->first()->name)->toBe('frontend');
 });
