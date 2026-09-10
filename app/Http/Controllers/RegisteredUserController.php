@@ -34,7 +34,6 @@ class RegisteredUserController extends Controller
         // dd($request->all());
         $userAttributes = $request->validate([
             'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users, email'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(6)],
         ]);
@@ -43,7 +42,6 @@ class RegisteredUserController extends Controller
             'employer' => ['required'],
             'logo' => ['required', File::types(['png', 'jpg', 'jpeg', 'webp', 'svg'])],
         ]);
-
 
         $user = User::create($userAttributes);
 

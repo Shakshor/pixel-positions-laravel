@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateJobRequest;
 use App\Models\Job;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class JobController extends Controller
@@ -20,8 +21,6 @@ class JobController extends Controller
         $jobs = Job::latest()->with('employer', 'tags')->get()->groupBy('is_featured');
 
         return view('jobs.index', [
-            'jobs' => $jobs[0],
-            'featuredJobs' => $jobs[1],
             'jobs' => $jobs[0] ?? [],
             'featuredJobs' => $jobs[1] ?? [],
             'tags' => Tag::all(),
@@ -43,12 +42,12 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'title'     => ['required'],
-            'salary'    => ['required'],
-            'location'  => ['required'],
-            'schedule'  => ['required', Rule::in(['Part Time', 'Full Time'])],
-            'url'       => ['required', 'active_url'],
-            'tags'      => ['required'],
+            'title' => ['required'],
+            'salary' => ['required'],
+            'location' => ['required'],
+            'schedule' => ['required', Rule::in(['Part Time', 'Full Time'])],
+            'url' => ['required', 'active_url'],
+            'tags' => ['required'],
         ]);
 
         $attributes['is_featured'] = $request->has('featured');
@@ -77,7 +76,11 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        //
+        Gate::authorize('update', $job);
+
+        return view('jobs.edit', [
+            'job' => $job,
+        ]);
     }
 
     /**
@@ -85,7 +88,23 @@ class JobController extends Controller
      */
     public function update(UpdateJobRequest $request, Job $job)
     {
-        //
+        $attributes = $request->validated();
+
+        $attributes['is_featured'] = $request->has('featured');
+
+        $job->update(Arr::except($attributes, 'tags'));
+
+        $tagIds = [];
+        if (! empty($attributes['tags'])) {
+            $tagNames = array_filter(array_map('trim', explode(',', $attributes['tags'])));
+            foreach ($tagNames as $name) {
+                $tag = Tag::firstOrCreate(['name' => strtolower($name)]);
+                $tagIds[] = $tag->id;
+            }
+        }
+        $job->tags()->sync($tagIds);
+
+        return redirect('/')->with('success', 'Job updated successfully!');
     }
 
     /**
