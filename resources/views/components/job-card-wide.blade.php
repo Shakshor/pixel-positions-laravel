@@ -6,7 +6,13 @@
     </div>
 
     <div class="flex flex-1 flex-col">
-        <a class="mb-2 self-start text-sm text-gray-400">{{ $job->employer->name }}</a>
+        <div class="flex items-center justify-between">
+            <a class="mb-2 self-start text-sm text-gray-400">{{ $job->employer->name }}</a>
+
+            @can('update', $job)
+                <a href="/jobs/{{ $job->id }}/edit" class="text-xs text-blue-500 hover:underline">Edit</a>
+            @endcan
+        </div>
 
         <h3 class="mt-3 text-xl font-bold transition-colors duration-300 group-hover:text-blue-800">
             <a href="{{ $job->url }}" target="_blank"> {{ $job->title }}

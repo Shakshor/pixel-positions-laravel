@@ -1,7 +1,13 @@
 @props(['job'])
 
 <x-panel class="flex flex-col text-center">
-    <div class="self-start">{{ $job->employer->name }}</div>
+    <div class="flex items-center justify-between self-stretch">
+        <div class="self-start">{{ $job->employer->name }}</div>
+
+        @can('update', $job)
+            <a href="/jobs/{{ $job->id }}/edit" class="text-xs text-blue-500 hover:underline">Edit</a>
+        @endcan
+    </div>
     <div class="py-8">
         <h3 class="text-xl font-bold transition-colors duration-300 group-hover:text-blue-800">
             <a href="{{ $job->url }}" target="_blank"> {{ $job->title }}

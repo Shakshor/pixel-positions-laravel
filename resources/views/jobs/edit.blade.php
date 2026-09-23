@@ -12,7 +12,7 @@
         </x-forms.select>
 
         <x-forms.input label="Url" name="url" :value="old('url', $job->url)" placeholder="https://acme.com/jobs/ceo-wanted" />
-        <x-forms.checkbox label="Feature (Costs Extra)" name="featured" :checked="old('featured', $job->is_featured)" />
+        <x-forms.checkbox label="Feature (Costs Extra)" name="featured" :checked="old() ? (bool) old('featured') : (bool) $job->is_featured" />
 
         <x-forms.divider />
 

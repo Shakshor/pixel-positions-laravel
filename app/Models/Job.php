@@ -21,6 +21,18 @@ class Job extends Model
         'is_featured',
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_featured' => 'boolean',
+        ];
+    }
+
     //
     public function employer(): BelongsTo
     {

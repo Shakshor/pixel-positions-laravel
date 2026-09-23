@@ -65,8 +65,62 @@ test('owners can update their job', function () {
     expect($job->location)->toBe('New York, NY');
     expect($job->schedule)->toBe('Full Time');
     expect($job->url)->toBe('https://example.com/jobs/new');
-    expect((bool) $job->is_featured)->toBeTrue();
+    expect($job->is_featured)->toBeTrue();
     expect($job->tags)->toHaveCount(3);
+});
+
+test('owners can update a featured job to be not featured', function () {
+    $user = User::factory()->create();
+    $employer = Employer::factory()->create(['user_id' => $user->id]);
+    $job = Job::factory()->create([
+        'employer_id' => $employer->id,
+        'title' => 'Featured Job',
+        'salary' => '$100,000 USD',
+        'location' => 'Remote',
+        'schedule' => 'Full Time',
+        'url' => 'https://example.com/jobs/featured',
+        'is_featured' => true,
+    ]);
+
+    $response = $this->actingAs($user)->patch("/jobs/{$job->id}", [
+        'title' => 'Featured Job',
+        'salary' => '$100,000 USD',
+        'location' => 'Remote',
+        'schedule' => 'Full Time',
+        'url' => 'https://example.com/jobs/featured',
+        'tags' => 'php',
+    ]);
+
+    $response->assertRedirect('/');
+
+    $job->refresh();
+
+    expect($job->is_featured)->toBeFalse();
+});
+
+test('edit page reflects the correct featured checkbox state', function () {
+    $user = User::factory()->create();
+    $employer = Employer::factory()->create(['user_id' => $user->id]);
+
+    $nonFeaturedJob = Job::factory()->create([
+        'employer_id' => $employer->id,
+        'is_featured' => false,
+    ]);
+
+    $featuredJob = Job::factory()->create([
+        'employer_id' => $employer->id,
+        'is_featured' => true,
+    ]);
+
+    $this->actingAs($user)
+        ->get("/jobs/{$nonFeaturedJob->id}/edit")
+        ->assertOk()
+        ->assertDontSee('checked');
+
+    $this->actingAs($user)
+        ->get("/jobs/{$featuredJob->id}/edit")
+        ->assertOk()
+        ->assertSee('checked');
 });
 
 test('job update fails and returns validation errors for invalid data', function () {
@@ -83,4 +137,32 @@ test('job update fails and returns validation errors for invalid data', function
     ]);
 
     $response->assertSessionHasErrors(['title', 'salary', 'location', 'schedule', 'url']);
+});
+
+test('owners can see the edit link on the jobs page', function () {
+    $user = User::factory()->create();
+    $employer = Employer::factory()->create(['user_id' => $user->id]);
+    $job = Job::factory()->create(['employer_id' => $employer->id]);
+
+    $this->actingAs($user)
+        ->get('/')
+        ->assertOk()
+        ->assertSee("/jobs/{$job->id}/edit");
+});
+
+test('guests and non-owners cannot see the edit link on the jobs page', function () {
+    $owner = User::factory()->create();
+    $employer = Employer::factory()->create(['user_id' => $owner->id]);
+    $job = Job::factory()->create(['employer_id' => $employer->id]);
+
+    $otherUser = User::factory()->create();
+
+    $this->get('/')
+        ->assertOk()
+        ->assertDontSee("/jobs/{$job->id}/edit");
+
+    $this->actingAs($otherUser)
+        ->get('/')
+        ->assertOk()
+        ->assertDontSee("/jobs/{$job->id}/edit");
 });
