@@ -24,7 +24,7 @@
             </div>
 
             <div class="space-x-6 font-bold">
-                <a href="#">Jobs</a>
+                <a href="/">Jobs</a>
                 <a href="#">Careers</a>
                 <a href="#">Salaries</a>
                 <a href="#">Companies</a>
@@ -40,6 +40,8 @@
                         @method('DELETE')
                         <button>Log Out</button>
                     </form>
+
+                    <a href="/profile">Profile</a>
                 </div>
             @endauth
 

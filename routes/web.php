@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SessionController;
@@ -13,6 +14,8 @@ Route::get('/jobs/create', [JobController::class, 'create'])->middleware('auth')
 Route::post('/jobs', [JobController::class, 'store'])->middleware('auth');
 Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->middleware('auth');
 Route::patch('/jobs/{job}', [JobController::class, 'update'])->middleware('auth');
+
+Route::get('/profile', ProfileController::class)->middleware('auth');
 
 // directly call using invoke method
 Route::get('/search', SearchController::class);
